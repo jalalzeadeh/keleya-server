@@ -1,0 +1,6 @@
+port: 4000
+db:
+  database: test
+  dialect: postgres
+  username: postgres
+  password: omar

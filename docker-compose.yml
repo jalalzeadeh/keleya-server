@@ -1,0 +1,44 @@
+version: '3.6'
+
+services:
+  db:
+    image: postgres:11.2-alpine
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: users
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+    volumes:
+      - my-db:/var/lib/postgres
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:4000:4000"
+    expose:
+      - "4000"
+    links:
+      - db
+    networks:
+      - app-network
+    command: "npm run start"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: users
+      POSTGRES_HOST: db
+
+volumes:
+  my-db:
+networks:
+  app-network:
+    driver: bridge
